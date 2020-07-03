@@ -41,6 +41,11 @@ class MetadataCollector
     private $enableCache = false;
 
     /**
+     * @var array
+     */
+    private $mappingsArrayCache = [];
+
+    /**
      * @param DocumentFinder $finder For finding documents.
      * @param DocumentParser $parser For reading document annotations.
      * @param CacheProvider  $cache  Cache provider to store the meta data for later use.
@@ -110,9 +115,14 @@ class MetadataCollector
 
         $cacheName =  'ongr.metadata.mapping.' . md5($name.serialize($config));
 
+        if (isset($this->$mappingsArrayCache[$cacheName])) {
+            return $this->$mappingsArrayCache[$cacheName];
+        }
+
         $this->enableCache && $mappings = $this->cache->fetch($cacheName);
 
         if (isset($mappings) && false !== $mappings) {
+            $this->$mappingsArrayCache[$cacheName] = $mappings;
             return $mappings;
         }
 
@@ -167,6 +177,7 @@ class MetadataCollector
         }
 
         $this->enableCache && $this->cache->save($cacheName, $mappings);
+        $this->$mappingsArrayCache[$cacheName] = $mappings;
 
         return $mappings;
     }
