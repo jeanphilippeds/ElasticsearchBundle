@@ -115,14 +115,14 @@ class MetadataCollector
 
         $cacheName =  'ongr.metadata.mapping.' . md5($name.serialize($config));
 
-        if (isset($this->$mappingsArrayCache[$cacheName])) {
-            return $this->$mappingsArrayCache[$cacheName];
+        if (isset($this->mappingsArrayCache[$cacheName])) {
+            return $this->mappingsArrayCache[$cacheName];
         }
 
         $this->enableCache && $mappings = $this->cache->fetch($cacheName);
 
         if (isset($mappings) && false !== $mappings) {
-            $this->$mappingsArrayCache[$cacheName] = $mappings;
+            $this->mappingsArrayCache[$cacheName] = $mappings;
             return $mappings;
         }
 
@@ -177,7 +177,7 @@ class MetadataCollector
         }
 
         $this->enableCache && $this->cache->save($cacheName, $mappings);
-        $this->$mappingsArrayCache[$cacheName] = $mappings;
+        $this->mappingsArrayCache[$cacheName] = $mappings;
 
         return $mappings;
     }
